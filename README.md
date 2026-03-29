@@ -1,73 +1,51 @@
 # Rename Police
 
-Rename Police is a macOS menu bar app that catches ugly filenames and fixes them before your Downloads folder turns into a crime scene.
+Rename Police is a macOS menu bar app that cleans up ugly filenames before they pile up.
 
-## Repo layout
+## What it does
 
-This repo now has two clearly separate parts:
+- Renames messy screenshots, downloads, folders, and AI-generated assets
+- Watches common folders like Downloads, Desktop, and Documents
+- Lets you accept a suggestion, batch rename many items, or choose your own name
+- Includes `Clean My Mess` for fast one-click cleanup
 
-- `RenamePolice/`: the macOS SwiftUI app for Xcode
-- `site/`: the Next.js marketing site for Vercel
+## Download
 
-Important:
+Get the latest Mac build from [GitHub Releases](https://github.com/Reelai-ha/rename-police/releases/latest).
 
-- Xcode should use only `RenamePolice.xcodeproj`
-- Vercel should deploy the repo root, which delegates to `site/`
-- The web files are intentionally outside the Xcode source folder
+## Why people use it
 
-## What the app does
+Finder cleanup is still too manual. Rename Police makes it fast to fix names like:
 
-- Watches `~/Downloads`, `~/Desktop`, and `~/Documents`
-- Suggests cleaner names for screenshots, installers, exports, folders, and AI-generated assets
-- Supports one-click rename, custom rename, batch rename, and `Clean My Mess`
-- Runs locally with no accounts, trackers, or cloud dependency
+- `Screenshot 2026-03-29 at 7.03.07 PM.png`
+- `final-final-copy-v2.pdf`
+- `ChatGPT Image Mar 29, 2026 at 7_01_12 PM.png`
 
-## Web site
+into cleaner names you can actually live with.
 
-The landing page lives in `site/`.
+## Features
 
-- `site/app/page.tsx`: landing page
-- `site/app/layout.tsx`: root layout and Vercel Analytics
-- `site/app/globals.css`: site styling
-- `site/package.json`: site-specific package metadata
-- `package.json`: root workspace package so Vercel detects Next.js reliably
-
-The landing page includes:
-
-- `Download for Mac`
-- `View Source`
-- `Chat with Kiaan`
-- `Support Me` via Dodo Payments
-
-## Vercel
-
-If Vercel was previously configured with a custom Root Directory or Output Directory, reset those to defaults and redeploy.
-
-This repo now works best with:
-
-- Root Directory: repo root
-- Framework Preset: Next.js
-- Build settings: auto-detected
-
-## macOS app structure
-
-- `RenamePolice/RenamePoliceApp.swift`: app entry and menu bar setup
-- `RenamePolice/ContentView.swift`: main interface
-- `RenamePolice/RenamePoliceManager.swift`: app state and rename actions
-- `RenamePolice/NamingJudge.swift`: filename scoring and suggestion logic
-- `RenamePolice/RenamePoliceModels.swift`: shared models
-- `RenamePolice/DownloadMonitor.swift`: watched-folder polling
-- `RenamePolice/NotificationEngine.swift`: native notification wrapper
-- `docs/PRD.md`: product requirements and v1 scope
-
-## Features in v1
-
-- Menu bar first UI
-- Smart screenshot naming
-- Better installer cleanup
-- AI-export aware suggestions
-- Batch rename for files and folders
+- One-click rename suggestions
 - Custom rename from the menu bar
-- `Clean My Mess` one-click Downloads cleanup
-- Undo last rename
-- Open source, local-first
+- Batch rename for files and folders
+- Smart screenshot naming
+- Installer cleanup
+- AI-export aware suggestions
+- `Clean My Mess` for instant Downloads cleanup
+- Local-first and open source
+
+## Privacy
+
+Rename Police runs locally on your Mac.
+It does not require an account and does not upload your files.
+
+## Open source
+
+- Source: [github.com/Reelai-ha/rename-police](https://github.com/Reelai-ha/rename-police)
+- Maker: [x.com/kiaan_mittal](https://x.com/kiaan_mittal)
+
+## Support
+
+If the app saved you time, you can support it here:
+
+- [Support Rename Police](https://checkout.dodopayments.com/buy/pdt_0NbXyrsvTTZkdAcj0ApHq?quantity=1)

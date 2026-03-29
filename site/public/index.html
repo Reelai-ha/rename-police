@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rename Police</title>
+    <meta name="description" content="Rename Police cleans ugly filenames from your Mac before they pile up." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f0b09;
+        --panel: rgba(31, 21, 17, 0.9);
+        --border: rgba(255,255,255,0.08);
+        --text: #fff8f1;
+        --muted: rgba(255,240,230,0.72);
+        --accent: #ff8744;
+        --accent-strong: #ffb347;
+        --ink: #1f140f;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, rgba(255,137,76,0.18), transparent 30%), linear-gradient(180deg, #19110e 0%, #0d0908 100%);
+        color: var(--text);
+        font-family: Inter, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+      }
+      main {
+        width: min(980px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 40px 0;
+      }
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: var(--panel);
+        padding: 32px;
+      }
+      .eyebrow {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 16px 0 10px;
+        font-size: clamp(44px, 8vw, 84px);
+        line-height: 0.94;
+        letter-spacing: -0.06em;
+      }
+      .lede {
+        margin: 0;
+        max-width: 620px;
+        font-size: clamp(20px, 2.8vw, 28px);
+      }
+      .sub {
+        margin: 12px 0 0;
+        max-width: 650px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 20px;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        color: var(--ink);
+      }
+      .secondary {
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.07);
+        color: var(--text);
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        margin-top: 22px;
+      }
+      .example {
+        display: grid;
+        grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.04);
+      }
+      .before { color: rgba(255,240,230,0.58); }
+      .after { color: #ffe5c8; }
+      .arrow { color: var(--accent); font-weight: 700; }
+      .support {
+        margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        color: var(--muted);
+      }
+      .footer {
+        margin-top: 24px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .footer a { color: var(--text); text-decoration: none; }
+      @media (max-width: 640px) {
+        .card { padding: 24px; border-radius: 22px; }
+        .example { grid-template-columns: 1fr; }
+        .arrow { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="card">
+        <div class="eyebrow">macOS utility</div>
+        <h1>Rename Police</h1>
+        <p class="lede">A cleaner Mac starts with cleaner filenames.</p>
+        <p class="sub">Rename messy downloads, screenshots, folders, and AI exports without leaving the menu bar.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/Reelai-ha/rename-police/releases/latest" target="_blank" rel="noreferrer">Download for Mac</a>
+          <a class="button secondary" href="https://github.com/Reelai-ha/rename-police" target="_blank" rel="noreferrer">View Source</a>
+        </div>
+        <div class="grid">
+          <div class="example">
+            <div class="before">Screenshot 2026-03-29 at 7.03.07 PM.png</div>
+            <div class="arrow">→</div>
+            <div class="after">screenshot-mar-29-2026-1903.png</div>
+          </div>
+          <div class="example">
+            <div class="before">ChatGPT Image Mar 29, 2026 at 7_01_12 PM.png</div>
+            <div class="arrow">→</div>
+            <div class="after">chatgpt-concept-image-mar-29-2026.png</div>
+          </div>
+        </div>
+        <div class="support">
+          <a class="button secondary" href="https://x.com/kiaan_mittal" target="_blank" rel="noreferrer">Chat with Kiaan</a>
+          <span>or</span>
+          <a class="button primary" href="https://checkout.dodopayments.com/buy/pdt_0NbXyrsvTTZkdAcj0ApHq?quantity=1" target="_blank" rel="noreferrer">Support Me</a>
+        </div>
+        <div class="footer">
+          Open source. Local-first. No accounts. Made by <a href="https://x.com/kiaan_mittal" target="_blank" rel="noreferrer">Kiaan</a>.
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
