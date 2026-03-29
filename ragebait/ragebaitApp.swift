@@ -2,31 +2,49 @@
 //  ragebaitApp.swift
 //  ragebait
 //
-//  Created by kiaan on 29/03/26.
-//
 
 import SwiftUI
-import SwiftData
 
 @main
-struct ragebaitApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+struct RagebaitApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        MenuBarExtra {
+            ContentView(manager: appDelegate.manager)
+        } label: {
+            MenuBarIcon(manager: appDelegate.manager)
         }
-        .modelContainer(sharedModelContainer)
+        .menuBarExtraStyle(.window)
+    }
+}
+
+struct MenuBarIcon: View {
+    @ObservedObject var manager: RenamePoliceManager
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Image(systemName: manager.criticalCases > 0 ? "shield.lefthalf.filled.badge.checkmark" : "folder.badge.questionmark")
+                .foregroundStyle(manager.criticalCases > 0 ? .orange : .primary)
+
+            if manager.openCases > 0 {
+                Text("\(min(manager.openCases, 9))")
+                    .font(.system(size: 8, weight: .black, design: .rounded))
+                    .foregroundColor(.white)
+                    .padding(3)
+                    .background(Color.red)
+                    .clipShape(Circle())
+                    .offset(x: 6, y: -5)
+            }
+        }
+        .imageScale(.medium)
+    }
+}
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    let manager = RenamePoliceManager()
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        manager.start()
     }
 }

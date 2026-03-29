@@ -2,58 +2,522 @@
 //  ContentView.swift
 //  ragebait
 //
-//  Created by kiaan on 29/03/26.
-//
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @ObservedObject var manager: RenamePoliceManager
+    @AppStorage("renamePolice.hasSeenOnboarding") private var hasSeenOnboarding = false
+    @State private var customRenameRecord: DownloadRecord?
+    @State private var customRenameInput = ""
+    @State private var displayedRecordLimit = 6
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        ZStack {
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.10, green: 0.08, blue: 0.10),
+                        Color(red: 0.17, green: 0.12, blue: 0.13),
+                        Color(red: 0.31, green: 0.18, blue: 0.11)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                RadialGradient(
+                    colors: [
+                        Color(red: 0.98, green: 0.54, blue: 0.12).opacity(0.35),
+                        .clear
+                    ],
+                    center: .topTrailing,
+                    startRadius: 20,
+                    endRadius: 280
+                )
             }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            .ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 16) {
+                    if !hasSeenOnboarding {
+                        onboardingCard
                     }
+                    heroCard
+                    dashboardGrid
+                    labCard
+                    feedCard
                 }
+                .padding(16)
             }
-        } detail: {
-            Text("Select an item")
+        }
+        .frame(width: 420, height: 610)
+        .sheet(item: $customRenameRecord) { record in
+            customRenameSheet(record)
         }
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+    var onboardingCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("WELCOME TO THE PRECINCT")
+                .font(.system(size: 11, weight: .black, design: .monospaced))
+                .foregroundColor(Color(red: 1.0, green: 0.86, blue: 0.68))
+
+            Text("It watches Downloads, Desktop, and Documents, then flags ugly names without surfacing the same files forever.")
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+
+            HStack(spacing: 10) {
+                onboardingTag("1", "Scan key folders")
+                onboardingTag("2", "Review suggestions")
+                onboardingTag("3", "Rename or batch-fix")
+            }
+
+            Button("Start Patrolling") {
+                hasSeenOnboarding = true
+            }
+            .buttonStyle(ActionButtonStyle(fill: Color(red: 0.98, green: 0.54, blue: 0.12), text: .white))
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 22)
+                .fill(Color(red: 0.24, green: 0.14, blue: 0.11))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .stroke(Color.white.opacity(0.10), lineWidth: 1)
+        )
+    }
+
+    var heroCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("RENAME POLICE")
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                        .foregroundColor(.white)
+                    Text("Fix messy names fast.")
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundColor(Color.white.opacity(0.76))
+                }
+                Spacer()
+                Image(systemName: "shield.lefthalf.filled")
+                    .font(.system(size: 34, weight: .black))
+                    .foregroundColor(.white.opacity(0.92))
+                    .frame(width: 58, height: 58)
+                    .background(Color.black.opacity(0.14))
+                    .clipShape(RoundedRectangle(cornerRadius: 18))
+            }
+
+            Text(manager.lastJudgment)
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+
+            Text(manager.statusLine.uppercased())
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .foregroundColor(Color.white.opacity(0.66))
+
+            HStack(spacing: 8) {
+                statPill("Scanned", "\(manager.filesScanned)")
+                statPill("Renamed", "\(manager.filesRenamed)")
+                statPill("Open Cases", "\(manager.openCases)")
+            }
+        }
+        .padding(18)
+        .background(
+            RoundedRectangle(cornerRadius: 22)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.92, green: 0.44, blue: 0.12),
+                            Color(red: 0.79, green: 0.22, blue: 0.10)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .stroke(Color.white.opacity(0.18), lineWidth: 1)
+        )
+    }
+
+    var dashboardGrid: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                summaryCard(
+                    title: "Critical",
+                    value: "\(manager.criticalCases)",
+                    caption: "Felonies waiting",
+                    color: Color(red: 1.0, green: 0.44, blue: 0.30)
+                )
+                summaryCard(
+                    title: "Ignored",
+                    value: "\(manager.ignoredSuggestions)",
+                    caption: "You overruled us",
+                    color: Color(red: 0.34, green: 0.78, blue: 0.72)
+                )
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("TRAFFIC")
+                        .font(.system(size: 11, weight: .black, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.70))
+                    Spacer()
+                    Text("\(manager.records.count) items")
+                        .font(.system(size: 10, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.54))
+                }
+
+                if manager.categoryBreakdown.isEmpty {
+                    Text("No recent activity yet.")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white.opacity(0.74))
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(manager.categoryBreakdown, id: \.0.rawValue) { item in
+                                categoryPill(category: item.0, count: item.1)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(14)
+            .panelBackground()
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+    var labCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("CONTROL LAB")
+                .font(.system(size: 11, weight: .black, design: .monospaced))
+                .foregroundColor(.white.opacity(0.70))
+
+            VStack(spacing: 10) {
+                HStack {
+                    Text("Alerts")
+                    Spacer()
+                    Toggle("", isOn: $manager.notificationsEnabled)
+                }
+                HStack {
+                    Text("Auto rename")
+                    Spacer()
+                    Toggle("", isOn: $manager.autoRenameEnabled)
+                }
+                HStack {
+                    Text("Smart screenshots")
+                    Spacer()
+                    Toggle("", isOn: $manager.smartScreenshotsEnabled)
+                }
+                HStack {
+                    Text("Meme mode")
+                    Spacer()
+                    Toggle("", isOn: $manager.memeModeEnabled)
+                }
+            }
+            .toggleStyle(.switch)
+            .font(.system(size: 12, weight: .medium, design: .rounded))
+            .foregroundColor(.white)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Batch")
+                    .font(.system(size: 11, weight: .black, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.70))
+                Text(manager.stagedBatchSummary)
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.58))
+            }
+
+            HStack(spacing: 8) {
+                Button("Scan Now") { manager.rescanDownloads() }
+                    .buttonStyle(ActionButtonStyle(fill: Color(red: 0.98, green: 0.54, blue: 0.12), text: .white))
+                Button("Rename All") { manager.renameAllFlagged() }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.14), text: .white))
+                Button("Undo") { manager.undoLastRename() }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
+            }
+
+            HStack(spacing: 8) {
+                Button("Pick Batch") { manager.stageBatchItems() }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
+                Button("Run Batch") { manager.runStagedBatchRename() }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
+                Button("Open Folders") { manager.revealDownloads() }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
+            }
+
+            Button("Clear Feed") { manager.clearFeed() }
+                .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.08), text: .white))
+        }
+        .padding(14)
+        .panelBackground()
+    }
+
+    var feedCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("RECENT CASES")
+                    .font(.system(size: 11, weight: .black, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.70))
+                Spacer()
+                Text("\(manager.records.count) tracked")
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.54))
+            }
+
+            if manager.records.isEmpty {
+                VStack(spacing: 10) {
+                    Text("Nothing suspicious yet.")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                    Text("New messy items will show up here.")
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundColor(.white.opacity(0.64))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 24)
+            } else {
+                ForEach(visibleRecords) { record in
+                    caseRow(record)
+                    if record.id != visibleRecords.last?.id {
+                        Divider().overlay(Color.black.opacity(0.08))
+                    }
+                }
+
+                if manager.records.count > displayedRecordLimit {
+                    Button("Load More") {
+                        displayedRecordLimit += 6
+                    }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.10), text: .white))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, 4)
+                }
             }
         }
+        .padding(16)
+        .panelBackground()
+    }
+
+    var visibleRecords: [DownloadRecord] {
+        Array(manager.records.prefix(displayedRecordLimit))
+    }
+
+    func caseRow(_ record: DownloadRecord) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(record.currentName)
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .lineLimit(2)
+                    HStack(spacing: 6) {
+                        Label(record.isDirectory ? "Folder" : record.judgment.category.label, systemImage: record.isDirectory ? "folder.fill" : record.judgment.category.symbol)
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                        Text("\(record.judgment.confidence)% confidence")
+                            .font(.system(size: 10, design: .monospaced))
+                    }
+                    .foregroundColor(.white.opacity(0.58))
+                }
+                Spacer()
+                severityBadge(record.judgment.severity)
+            }
+
+            Text(record.judgment.roast)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.70))
+
+            Text(record.judgment.reason)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundColor(.white.opacity(0.54))
+
+            HStack {
+                Text("Suggested: \(record.judgment.suggestedName)")
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.60))
+                    .lineLimit(1)
+                Spacer()
+                Button("Skip") {
+                    manager.dismiss(record)
+                }
+                .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.10), text: .white))
+                Button("Custom") {
+                    customRenameInput = record.currentName
+                    customRenameRecord = record
+                }
+                .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.10), text: .white))
+                Button(record.renamed ? "Reveal" : "Rename") {
+                    if record.renamed {
+                        manager.reveal(record)
+                    } else {
+                        manager.rename(record)
+                    }
+                }
+                .buttonStyle(ActionButtonStyle(
+                    fill: record.renamed ? Color.white.opacity(0.14) : Color(red: 0.98, green: 0.54, blue: 0.12),
+                    text: .white
+                ))
+            }
+        }
+        .padding(12)
+        .background(Color.white.opacity(0.06))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+
+    func customRenameSheet(_ record: DownloadRecord) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Custom Rename")
+                .font(.system(size: 22, weight: .black, design: .rounded))
+            Text(record.currentName)
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(.secondary)
+                .lineLimit(2)
+
+            TextField("Enter a new filename", text: $customRenameInput)
+                .textFieldStyle(.roundedBorder)
+
+            Text("Tip: keep the extension or we’ll carry the current one forward for you.")
+                .font(.system(size: 11, weight: .medium, design: .rounded))
+                .foregroundColor(.secondary)
+
+            HStack {
+                Button("Cancel") {
+                    customRenameRecord = nil
+                }
+                .buttonStyle(.bordered)
+
+                Spacer()
+
+                Button("Rename") {
+                    manager.rename(record, to: customRenameInput)
+                    customRenameRecord = nil
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(red: 0.92, green: 0.44, blue: 0.12))
+            }
+        }
+        .padding(24)
+        .frame(width: 420)
+    }
+
+    func statPill(_ title: String, _ value: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(size: 15, weight: .black, design: .rounded))
+            Text(title.uppercased())
+                .font(.system(size: 9, weight: .bold, design: .monospaced))
+        }
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
+        .background(Color.white.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+
+    func severityBadge(_ severity: NamingSeverity) -> some View {
+        Text(severity.label.uppercased())
+            .font(.system(size: 9, weight: .black, design: .monospaced))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .foregroundColor(.white)
+            .background(severity == .criminal ? Color.red.opacity(0.85) : Color.orange.opacity(0.48))
+            .clipShape(Capsule())
+    }
+
+    func summaryCard(title: String, value: String, caption: String, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title.uppercased())
+                .font(.system(size: 10, weight: .black, design: .monospaced))
+                .foregroundColor(.white.opacity(0.62))
+            Text(value)
+                .font(.system(size: 28, weight: .black, design: .rounded))
+                .foregroundColor(.white)
+            Text(caption)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundColor(.white.opacity(0.70))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(color.opacity(0.28))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        )
+    }
+
+    func categoryPill(category: FileCategory, count: Int) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: category.symbol)
+            Text(category.label)
+            Text("\(count)")
+                .font(.system(size: 10, weight: .black, design: .monospaced))
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(Color.white.opacity(0.10))
+                .clipShape(Capsule())
+        }
+        .font(.system(size: 12, weight: .semibold, design: .rounded))
+        .foregroundColor(.white)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 9)
+        .background(Color.white.opacity(0.08))
+        .clipShape(Capsule())
+    }
+
+    func onboardingTag(_ step: String, _ label: String) -> some View {
+        HStack(spacing: 8) {
+            Text(step)
+                .font(.system(size: 10, weight: .black, design: .rounded))
+                .foregroundColor(Color.black.opacity(0.72))
+                .frame(width: 20, height: 20)
+                .background(Color(red: 1.0, green: 0.82, blue: 0.54))
+                .clipShape(Circle())
+            Text(label)
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .background(Color.white.opacity(0.08))
+        .clipShape(Capsule())
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+private struct ActionButtonStyle: ButtonStyle {
+    let fill: Color
+    let text: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 12, weight: .bold, design: .rounded))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 9)
+            .background(fill.opacity(configuration.isPressed ? 0.82 : 1))
+            .foregroundColor(text)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+    }
+}
+
+private extension View {
+    func panelBackground() -> some View {
+        self
+            .background(
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(Color.white.opacity(0.08))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 22)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
+    }
 }
