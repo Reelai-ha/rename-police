@@ -26,6 +26,7 @@ struct ContentView: View {
                     dashboardGrid
                     labCard
                     feedCard
+                    footerCard
                 }
                 .padding(16)
             }
@@ -282,6 +283,23 @@ struct ContentView: View {
         Array(manager.records.prefix(displayedRecordLimit))
     }
 
+    var footerCard: some View {
+        HStack(spacing: 10) {
+            Button("View Source") {
+                openLink("https://github.com/Reelai-ha/rename-police")
+            }
+            .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.08), text: .white))
+
+            Spacer()
+
+            Button("Made by Kiaan") {
+                openLink("https://x.com/kiaan_mittal")
+            }
+            .buttonStyle(ActionButtonStyle(fill: Color.clear, text: Color.white.opacity(0.72)))
+        }
+        .padding(.horizontal, 4)
+    }
+
     func caseRow(_ record: DownloadRecord) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
@@ -373,6 +391,11 @@ struct ContentView: View {
         }
         .padding(24)
         .frame(width: 420)
+    }
+
+    func openLink(_ string: String) {
+        guard let url = URL(string: string) else { return }
+        NSWorkspace.shared.open(url)
     }
 
     func statPill(_ title: String, _ value: String) -> some View {
