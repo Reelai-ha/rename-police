@@ -9,14 +9,15 @@ Rename Police is a macOS menu bar app that catches ugly filenames and fixes them
 - Supports one-click rename, custom rename, batch rename, and `Clean My Mess`
 - Runs locally with no accounts, trackers, or cloud dependency
 
-## Landing page
+## Web site
 
-The repo includes a Next.js landing page ready for Vercel.
+The marketing site now lives in `site/` so it stays separate from the macOS app and out of the Xcode project flow.
 
-- `app/page.tsx`: marketing homepage
-- `app/layout.tsx`: root layout and Vercel Analytics
-- `app/globals.css`: site styling
-- `package.json`: Next.js and analytics dependencies
+- `site/app/page.tsx`: landing page
+- `site/app/layout.tsx`: root layout and Vercel Analytics
+- `site/app/globals.css`: site styling
+- `site/package.json`: Next.js dependencies
+- `vercel.json`: Vercel build config for the `site/` app
 
 The landing page includes:
 
@@ -25,20 +26,11 @@ The landing page includes:
 - `Chat with Kiaan`
 - `Support Me` via Dodo Payments
 
-## Download flow
+## Vercel setup
 
-You do not need a `.dmg` for v1.
+This repo is configured so Vercel builds the Next.js app from `site/`.
 
-The smoothest setup is:
-
-1. Build the macOS app in Xcode.
-2. Zip the generated `.app` bundle.
-3. Upload that `.zip` to a GitHub Release.
-4. Point the landing page download button to `releases/latest`.
-
-This is faster to ship, easy to update, and works well with Vercel + GitHub.
-
-For local packaging, run `./scripts/package-mac.sh` to create a release zip, or `./scripts/package-mac.sh --dmg` if you want a DMG too.
+If your Vercel project still has an old Output Directory like `public`, clear that in the dashboard or redeploy after pulling the new `vercel.json`.
 
 ## macOS app structure
 
