@@ -22,6 +22,7 @@ final class RenamePoliceManager: ObservableObject {
     @Published var lastReceipt: RenameReceipt?
     @Published var stagedBatchCount = 0
     @Published var stagedBatchSummary = "No batch staged"
+    @Published var cleanedMessCount = 0
 
     private let judge = NamingJudge()
     private let monitor = DownloadMonitor()
@@ -79,6 +80,45 @@ final class RenamePoliceManager: ObservableObject {
 
         lastJudgment = "Batch rename complete. Downloads look employable again."
         statusLine = "Renamed \(flagged.count) files"
+    }
+
+    func cleanMyMess() {
+        guard let downloads = DownloadMonitor.downloadsDirectory() else {
+            statusLine = "Couldn't find Downloads"
+            return
+        }
+
+        let snapshot = monitor.snapshotFiles(in: downloads)
+        var renamedCount = 0
+        var skippedCount = 0
+
+        for url in snapshot {
+            guard let record = makeRecord(url, allowProcessed: true) else {
+                skippedCount += 1
+                continue
+            }
+
+            guard record.judgment.severity != .clean else {
+                skippedCount += 1
+                continue
+            }
+
+            if !records.contains(where: { $0.resourceID == record.resourceID }) {
+                records.insert(record, at: 0)
+            }
+
+            rename(record, silently: true)
+            renamedCount += 1
+        }
+
+        records = Array(records.prefix(20))
+        cleanedMessCount += renamedCount
+        lastJudgment = renamedCount > 0
+            ? "Cleaned \(renamedCount) Downloads item\(renamedCount == 1 ? "" : "s")."
+            : "Downloads were already decent."
+        statusLine = skippedCount > 0
+            ? "Clean My Mess renamed \(renamedCount), skipped \(skippedCount)"
+            : "Clean My Mess renamed \(renamedCount)"
     }
 
     func stageBatchItems() {

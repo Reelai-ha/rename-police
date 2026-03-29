@@ -103,7 +103,7 @@ struct ContentView: View {
             HStack(spacing: 8) {
                 statPill("Scanned", "\(manager.filesScanned)")
                 statPill("Renamed", "\(manager.filesRenamed)")
-                statPill("Open Cases", "\(manager.openCases)")
+                statPill("Cleaned", "\(manager.cleanedMessCount)")
             }
         }
         .padding(18)
@@ -206,15 +206,17 @@ struct ContentView: View {
             }
 
             HStack(spacing: 8) {
+                Button("Clean My Mess") { manager.cleanMyMess() }
+                    .buttonStyle(ActionButtonStyle(fill: Color(red: 0.97, green: 0.74, blue: 0.24), text: Color.black.opacity(0.82)))
                 Button("Scan Now") { manager.rescanDownloads() }
                     .buttonStyle(ActionButtonStyle(fill: Color(red: 0.88, green: 0.48, blue: 0.18), text: .white))
                 Button("Rename All") { manager.renameAllFlagged() }
                     .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.14), text: .white))
-                Button("Undo") { manager.undoLastRename() }
-                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
             }
 
             HStack(spacing: 8) {
+                Button("Undo") { manager.undoLastRename() }
+                    .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
                 Button("Pick Batch") { manager.stageBatchItems() }
                     .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.12), text: .white))
                 Button("Run Batch") { manager.runStagedBatchRename() }

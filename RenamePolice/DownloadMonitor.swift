@@ -55,6 +55,12 @@ final class DownloadMonitor {
         watchedDirectories.map(\.lastPathComponent).joined(separator: ", ")
     }
 
+    func snapshotFiles(in directory: URL) -> [URL] {
+        files(in: directory).sorted {
+            $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending
+        }
+    }
+
     private func files(in directory: URL) -> [URL] {
         let urls = (try? FileManager.default.contentsOfDirectory(
             at: directory,
@@ -88,5 +94,9 @@ final class DownloadMonitor {
         ]
 
         return candidates.compactMap { $0 }
+    }
+
+    nonisolated static func downloadsDirectory() -> URL? {
+        FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
     }
 }
