@@ -2,7 +2,20 @@
 
 Rename Police is a macOS menu bar app that catches ugly filenames and fixes them before your Downloads folder turns into a crime scene.
 
-## What it does
+## Repo layout
+
+This repo now has two clearly separate parts:
+
+- `RenamePolice/`: the macOS SwiftUI app for Xcode
+- `site/`: the Next.js marketing site for Vercel
+
+Important:
+
+- Xcode should use only `RenamePolice.xcodeproj`
+- Vercel should deploy the repo root, which delegates to `site/`
+- The web files are intentionally outside the Xcode source folder
+
+## What the app does
 
 - Watches `~/Downloads`, `~/Desktop`, and `~/Documents`
 - Suggests cleaner names for screenshots, installers, exports, folders, and AI-generated assets
@@ -11,13 +24,13 @@ Rename Police is a macOS menu bar app that catches ugly filenames and fixes them
 
 ## Web site
 
-The marketing site now lives in `site/` so it stays separate from the macOS app and out of the Xcode project flow.
+The landing page lives in `site/`.
 
 - `site/app/page.tsx`: landing page
 - `site/app/layout.tsx`: root layout and Vercel Analytics
 - `site/app/globals.css`: site styling
-- `site/package.json`: Next.js dependencies
-- `vercel.json`: Vercel build config for the `site/` app
+- `site/package.json`: site-specific package metadata
+- `package.json`: root workspace package so Vercel detects Next.js reliably
 
 The landing page includes:
 
@@ -26,11 +39,15 @@ The landing page includes:
 - `Chat with Kiaan`
 - `Support Me` via Dodo Payments
 
-## Vercel setup
+## Vercel
 
-This repo is configured so Vercel builds the Next.js app from `site/`.
+If Vercel was previously configured with a custom Root Directory or Output Directory, reset those to defaults and redeploy.
 
-If your Vercel project still has an old Output Directory like `public`, clear that in the dashboard or redeploy after pulling the new `vercel.json`.
+This repo now works best with:
+
+- Root Directory: repo root
+- Framework Preset: Next.js
+- Build settings: auto-detected
 
 ## macOS app structure
 
