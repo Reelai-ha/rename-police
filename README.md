@@ -1,28 +1,31 @@
 # Rename Police
 
-Rename Police is a macOS menu bar app that watches your Downloads folder, flags messy filenames, and suggests cleaner names with a little attitude.
+Rename Police is a macOS menu bar app that watches common user folders, flags messy file and folder names, and suggests cleaner replacements with a little attitude.
 
 ## What it does
 
-- Detects new files in `~/Downloads`
+- Detects new files in `~/Downloads`, `~/Desktop`, and `~/Documents`
 - Classifies files like screenshots, installers, memes, documents, and archives
 - Scores ugly names and suggests better replacements
-- Lets you rename files one by one or batch-rename flagged files
+- Lets you rename files one by one, batch-rename flagged items, or manually override a name from the menu bar
 - Supports auto-rename for people who want a cleaner Downloads folder without thinking about it
 - Keeps the app lightweight and local-only
 
 ## Why this exists
 
-Downloads folders are where file names go to die. This app makes cleanup fast enough that people might actually do it.
+Finder cleanup is still more manual than it should be. Rename Police makes naming cleanup fast enough that people might actually keep their folders sane.
 
 ## Current feature set
 
 - Live Downloads monitoring
+- Desktop and Documents monitoring
 - Smart screenshot naming with timestamps
 - Installer cleanup
 - Meme-mode naming for internet junk
 - Native macOS notifications
 - Undo last rename
+- Batch rename for files and folders
+- Custom rename from the menu bar
 - Open-source, no paywall
 
 ## Project structure
@@ -32,7 +35,7 @@ Downloads folders are where file names go to die. This app makes cleanup fast en
 - `ragebait/RenamePoliceManager.swift`: App state and rename actions
 - `ragebait/NamingJudge.swift`: Filename scoring and suggestion logic
 - `ragebait/RenamePoliceModels.swift`: Shared models
-- `ragebait/DownloadMonitor.swift`: Downloads polling
+- `ragebait/DownloadMonitor.swift`: watched-folder polling
 - `ragebait/NotificationEngine.swift`: Native notification wrapper
 
 ## Dev notes
