@@ -79,6 +79,7 @@ h2 {
 }
 
 .sublede,
+.install-note,
 p,
 li,
 .section-note,
@@ -194,9 +195,21 @@ li,
   margin-top: 24px;
 }
 
-.bullet-list {
+.bullet-list,
+.number-list {
   margin: 0;
   padding-left: 18px;
+}
+
+.install-note {
+  margin: 16px 0 0;
+  font-size: 14px;
+}
+
+.install-note code,
+.number-list code {
+  font-family: "SF Mono", "JetBrains Mono", monospace;
+  font-size: 0.94em;
 }
 
 .support-card p {
