@@ -1,6 +1,6 @@
 //
 //  NamingJudge.swift
-//  ragebait
+//  Rename Police
 //
 
 import Foundation
@@ -71,6 +71,11 @@ struct NamingJudge {
             reasons.append("internet goblin energy")
         }
 
+        if aiProvider(from: normalized) != nil {
+            score += 14
+            reasons.append("ai-generated export naming")
+        }
+
         switch category {
         case .screenshot:
             score += 10
@@ -81,6 +86,9 @@ struct NamingJudge {
         case .meme:
             score += 8
             reasons.append("meme deserves an actual label")
+        case .aiAsset:
+            score += 10
+            reasons.append("ai asset should mention source and topic")
         default:
             break
         }
@@ -122,6 +130,13 @@ struct NamingJudge {
                 .prefix(3)
                 .joined(separator: "-")
             let stem = topic.isEmpty ? "meme-drop" : "meme-\(topic)"
+            return ext.isEmpty ? stem : "\(stem).\(ext.lowercased())"
+        case .aiAsset:
+            let provider = aiProvider(from: base.lowercased()) ?? "ai"
+            let topic = cleanWords(from: base, banned: commonBannedWords + aiNoiseWords)
+                .prefix(3)
+                .joined(separator: "-")
+            let stem = topic.isEmpty ? "\(provider)-asset" : "\(provider)-\(topic)"
             return ext.isEmpty ? stem : "\(stem).\(ext.lowercased())"
         default:
             break
@@ -182,6 +197,7 @@ struct NamingJudge {
         case .screenshot: return "screenshot"
         case .installer: return "app-installer"
         case .meme: return "meme-drop"
+        case .aiAsset: return "ai-asset"
         case .document: return "document"
         case .archive: return "archive"
         case .media: return "media-file"
@@ -213,6 +229,8 @@ struct NamingJudge {
                 return "'\(current)' is installer sludge. '\(suggested)' is far less cursed."
             case .meme:
                 return "'\(current)' is chaotic meme contraband. Call it '\(suggested)'."
+            case .aiAsset:
+                return "'\(current)' deserves a real ai-export name. Use '\(suggested)'."
             default:
                 return "'\(current)' is a naming felony. Rename it to '\(suggested)'."
             }
@@ -243,6 +261,10 @@ struct NamingJudge {
             return .meme
         }
 
+        if aiProvider(from: normalized) != nil {
+            return .aiAsset
+        }
+
         if ["png", "jpg", "jpeg", "gif", "webp", "mp4", "mov"].contains(ext) {
             return .media
         }
@@ -262,5 +284,27 @@ struct NamingJudge {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd-HHmm"
         return formatter.string(from: date)
+    }
+
+    private var aiNoiseWords: [String] {
+        [
+            "chatgpt", "claude", "grok", "gemini", "midjourney", "dalle", "openai",
+            "anthropic", "generated", "generation", "image", "images", "output",
+            "response", "conversation", "export", "file", "photo"
+        ]
+    }
+
+    private func aiProvider(from normalized: String) -> String? {
+        let providers = [
+            "chatgpt": "chatgpt",
+            "claude": "claude",
+            "grok": "grok",
+            "gemini": "gemini",
+            "midjourney": "midjourney",
+            "dalle": "dalle",
+            "openai": "openai"
+        ]
+
+        return providers.first { normalized.contains($0.key) }?.value
     }
 }

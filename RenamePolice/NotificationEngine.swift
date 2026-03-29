@@ -1,6 +1,6 @@
 //
 //  NotificationEngine.swift
-//  ragebait
+//  Rename Police
 //
 //  Thin wrapper around native macOS notifications.
 //

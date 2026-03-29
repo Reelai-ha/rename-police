@@ -1,6 +1,6 @@
 //
 //  RenamePoliceModels.swift
-//  ragebait
+//  Rename Police
 //
 
 import Foundation
@@ -23,6 +23,7 @@ enum FileCategory: String, CaseIterable {
     case screenshot
     case installer
     case meme
+    case aiAsset
     case document
     case archive
     case media
@@ -33,6 +34,7 @@ enum FileCategory: String, CaseIterable {
         case .screenshot: return "Screenshot"
         case .installer: return "Installer"
         case .meme: return "Meme"
+        case .aiAsset: return "AI Asset"
         case .document: return "Document"
         case .archive: return "Archive"
         case .media: return "Media"
@@ -45,6 +47,7 @@ enum FileCategory: String, CaseIterable {
         case .screenshot: return "camera.viewfinder"
         case .installer: return "shippingbox.fill"
         case .meme: return "sparkles.tv.fill"
+        case .aiAsset: return "wand.and.stars"
         case .document: return "doc.text.fill"
         case .archive: return "archivebox.fill"
         case .media: return "photo.on.rectangle.angled"

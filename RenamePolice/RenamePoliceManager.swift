@@ -1,6 +1,6 @@
 //
 //  RenamePoliceManager.swift
-//  ragebait
+//  Rename Police
 //
 
 import Foundation

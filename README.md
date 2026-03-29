@@ -1,6 +1,6 @@
 # Rename Police
 
-Rename Police is a macOS menu bar app that watches common user folders, flags messy file and folder names, and suggests cleaner replacements with a little attitude.
+Rename Police is a macOS menu bar app for cleaning up filenames and folder names without opening Finder rename flows all day.
 
 ## What it does
 
@@ -13,12 +13,11 @@ Rename Police is a macOS menu bar app that watches common user folders, flags me
 
 ## Why this exists
 
-Finder cleanup is still more manual than it should be. Rename Police makes naming cleanup fast enough that people might actually keep their folders sane.
+Finder cleanup is still more manual than it should be. Rename Police is meant to be a fast v1 utility that catches messy names early and makes fixing them feel immediate.
 
 ## Current feature set
 
-- Live Downloads monitoring
-- Desktop and Documents monitoring
+- Downloads, Desktop, and Documents monitoring
 - Smart screenshot naming with timestamps
 - Installer cleanup
 - Meme-mode naming for internet junk
@@ -30,19 +29,26 @@ Finder cleanup is still more manual than it should be. Rename Police makes namin
 
 ## Project structure
 
-- `ragebait/ragebaitApp.swift`: App entry and menu bar setup
-- `ragebait/ContentView.swift`: Main interface
-- `ragebait/RenamePoliceManager.swift`: App state and rename actions
-- `ragebait/NamingJudge.swift`: Filename scoring and suggestion logic
-- `ragebait/RenamePoliceModels.swift`: Shared models
-- `ragebait/DownloadMonitor.swift`: watched-folder polling
-- `ragebait/NotificationEngine.swift`: Native notification wrapper
+- `RenamePolice/RenamePoliceApp.swift`: App entry and menu bar setup
+- `RenamePolice/ContentView.swift`: Main interface
+- `RenamePolice/RenamePoliceManager.swift`: App state and rename actions
+- `RenamePolice/NamingJudge.swift`: Filename scoring and suggestion logic
+- `RenamePolice/RenamePoliceModels.swift`: Shared models
+- `RenamePolice/DownloadMonitor.swift`: watched-folder polling
+- `RenamePolice/NotificationEngine.swift`: Native notification wrapper
+- `docs/PRD.md`: product requirements and v1 scope
 
 ## Dev notes
 
 - Built with SwiftUI for macOS
 - No network dependency
 - No cookies, trackers, or accounts
+
+## V1 notes
+
+- The app is intentionally menu-bar first
+- Suggestions are heuristic, not AI-generated
+- Batch rename currently runs from a staged picker inside the app
 
 ## Good files to test with
 

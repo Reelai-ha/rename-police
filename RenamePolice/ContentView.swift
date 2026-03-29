@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  ragebait
+//  Rename Police
 //
 
 import SwiftUI
@@ -14,31 +14,11 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            ZStack {
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.10, green: 0.08, blue: 0.10),
-                        Color(red: 0.17, green: 0.12, blue: 0.13),
-                        Color(red: 0.31, green: 0.18, blue: 0.11)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-
-                RadialGradient(
-                    colors: [
-                        Color(red: 0.98, green: 0.54, blue: 0.12).opacity(0.35),
-                        .clear
-                    ],
-                    center: .topTrailing,
-                    startRadius: 20,
-                    endRadius: 280
-                )
-            }
-            .ignoresSafeArea()
+            Color(red: 0.12, green: 0.10, blue: 0.11)
+                .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: 14) {
                     if !hasSeenOnboarding {
                         onboardingCard
                     }
@@ -60,9 +40,9 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text("WELCOME TO THE PRECINCT")
                 .font(.system(size: 11, weight: .black, design: .monospaced))
-                .foregroundColor(Color(red: 1.0, green: 0.86, blue: 0.68))
+                .foregroundColor(Color(red: 0.98, green: 0.78, blue: 0.54))
 
-            Text("It watches Downloads, Desktop, and Documents, then flags ugly names without surfacing the same files forever.")
+            Text("Watches your key folders. Flags messy names. Lets you fix them fast.")
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .foregroundColor(.white)
 
@@ -80,32 +60,32 @@ struct ContentView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 22)
-                .fill(Color(red: 0.24, green: 0.14, blue: 0.11))
+                .fill(Color.white.opacity(0.05))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 22)
-                .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
         )
     }
 
     var heroCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("RENAME POLICE")
                         .font(.system(size: 28, weight: .black, design: .rounded))
                         .foregroundColor(.white)
-                    Text("Fix messy names fast.")
+                    Text("Batch rename and clean up filenames.")
                         .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundColor(Color.white.opacity(0.76))
+                        .foregroundColor(Color.white.opacity(0.72))
                 }
                 Spacer()
                 Image(systemName: "shield.lefthalf.filled")
-                    .font(.system(size: 34, weight: .black))
-                    .foregroundColor(.white.opacity(0.92))
-                    .frame(width: 58, height: 58)
-                    .background(Color.black.opacity(0.14))
-                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                    .font(.system(size: 28, weight: .black))
+                    .foregroundColor(Color(red: 0.97, green: 0.80, blue: 0.52))
+                    .frame(width: 48, height: 48)
+                    .background(Color.white.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
             }
 
             Text(manager.lastJudgment)
@@ -113,7 +93,7 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white.opacity(0.12))
+                .background(Color.white.opacity(0.08))
                 .clipShape(RoundedRectangle(cornerRadius: 14))
 
             Text(manager.statusLine.uppercased())
@@ -129,20 +109,11 @@ struct ContentView: View {
         .padding(18)
         .background(
             RoundedRectangle(cornerRadius: 22)
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.92, green: 0.44, blue: 0.12),
-                            Color(red: 0.79, green: 0.22, blue: 0.10)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .fill(Color(red: 0.24, green: 0.15, blue: 0.12))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 22)
-                .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
         )
     }
 
@@ -199,7 +170,7 @@ struct ContentView: View {
                 .font(.system(size: 11, weight: .black, design: .monospaced))
                 .foregroundColor(.white.opacity(0.70))
 
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 HStack {
                     Text("Alerts")
                     Spacer()
@@ -236,7 +207,7 @@ struct ContentView: View {
 
             HStack(spacing: 8) {
                 Button("Scan Now") { manager.rescanDownloads() }
-                    .buttonStyle(ActionButtonStyle(fill: Color(red: 0.98, green: 0.54, blue: 0.12), text: .white))
+                    .buttonStyle(ActionButtonStyle(fill: Color(red: 0.88, green: 0.48, blue: 0.18), text: .white))
                 Button("Rename All") { manager.renameAllFlagged() }
                     .buttonStyle(ActionButtonStyle(fill: Color.white.opacity(0.14), text: .white))
                 Button("Undo") { manager.undoLastRename() }
@@ -328,10 +299,6 @@ struct ContentView: View {
                 Spacer()
                 severityBadge(record.judgment.severity)
             }
-
-            Text(record.judgment.roast)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
-                .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.70))
 
             Text(record.judgment.reason)
                 .font(.system(size: 10, design: .monospaced))
@@ -501,7 +468,7 @@ private struct ActionButtonStyle: ButtonStyle {
             .font(.system(size: 12, weight: .bold, design: .rounded))
             .padding(.horizontal, 12)
             .padding(.vertical, 9)
-            .background(fill.opacity(configuration.isPressed ? 0.82 : 1))
+            .background(fill.opacity(configuration.isPressed ? 0.78 : 1))
             .foregroundColor(text)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
@@ -513,11 +480,11 @@ private extension View {
         self
             .background(
                 RoundedRectangle(cornerRadius: 22)
-                    .fill(Color.white.opacity(0.08))
+                    .fill(Color.white.opacity(0.06))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 22)
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    .stroke(Color.white.opacity(0.07), lineWidth: 1)
             )
     }
 }

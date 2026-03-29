@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		DB5ABA942F791F3D0060B376 /* ragebait.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ragebait.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB5ABA942F791F3D0060B376 /* RenamePolice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RenamePolice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DB5ABA962F791F3D0060B376 /* ragebait */ = {
+		DB5ABA962F791F3D0060B376 /* RenamePolice */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ragebait;
+			path = RenamePolice;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		DB5ABA8B2F791F3D0060B376 = {
 			isa = PBXGroup;
 			children = (
-				DB5ABA962F791F3D0060B376 /* ragebait */,
+				DB5ABA962F791F3D0060B376 /* RenamePolice */,
 				DB5ABA952F791F3D0060B376 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		DB5ABA952F791F3D0060B376 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DB5ABA942F791F3D0060B376 /* ragebait.app */,
+				DB5ABA942F791F3D0060B376 /* RenamePolice.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DB5ABA932F791F3D0060B376 /* ragebait */ = {
+		DB5ABA932F791F3D0060B376 /* RenamePolice */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB5ABAA12F791F3E0060B376 /* Build configuration list for PBXNativeTarget "ragebait" */;
+			buildConfigurationList = DB5ABAA12F791F3E0060B376 /* Build configuration list for PBXNativeTarget "RenamePolice" */;
 			buildPhases = (
 				DB5ABA902F791F3D0060B376 /* Sources */,
 				DB5ABA912F791F3D0060B376 /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DB5ABA962F791F3D0060B376 /* ragebait */,
+				DB5ABA962F791F3D0060B376 /* RenamePolice */,
 			);
-			name = ragebait;
+			name = RenamePolice;
 			packageProductDependencies = (
 			);
-			productName = ragebait;
-			productReference = DB5ABA942F791F3D0060B376 /* ragebait.app */;
+			productName = RenamePolice;
+			productReference = DB5ABA942F791F3D0060B376 /* RenamePolice.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = DB5ABA8F2F791F3D0060B376 /* Build configuration list for PBXProject "ragebait" */;
+			buildConfigurationList = DB5ABA8F2F791F3D0060B376 /* Build configuration list for PBXProject "RenamePolice" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DB5ABA932F791F3D0060B376 /* ragebait */,
+				DB5ABA932F791F3D0060B376 /* RenamePolice */,
 			);
 		};
 /* End PBXProject section */
@@ -264,7 +264,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kiaan.ragebait;
+				PRODUCT_BUNDLE_IDENTIFIER = com.reelai.renamepolice;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -295,7 +295,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kiaan.ragebait;
+				PRODUCT_BUNDLE_IDENTIFIER = com.reelai.renamepolice;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -310,7 +310,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DB5ABA8F2F791F3D0060B376 /* Build configuration list for PBXProject "ragebait" */ = {
+		DB5ABA8F2F791F3D0060B376 /* Build configuration list for PBXProject "RenamePolice" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB5ABA9F2F791F3E0060B376 /* Debug */,
@@ -319,7 +319,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB5ABAA12F791F3E0060B376 /* Build configuration list for PBXNativeTarget "ragebait" */ = {
+		DB5ABAA12F791F3E0060B376 /* Build configuration list for PBXNativeTarget "RenamePolice" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB5ABAA22F791F3E0060B376 /* Debug */,

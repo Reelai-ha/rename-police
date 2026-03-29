@@ -1,12 +1,12 @@
 //
-//  ragebaitApp.swift
-//  ragebait
+//  RenamePoliceApp.swift
+//  Rename Police
 //
 
 import SwiftUI
 
 @main
-struct RagebaitApp: App {
+struct RenamePoliceApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
