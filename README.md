@@ -1,59 +1,64 @@
 # Rename Police
 
-Rename Police is a macOS menu bar app for cleaning up filenames and folder names without opening Finder rename flows all day.
+Rename Police is a macOS menu bar app that catches ugly filenames and fixes them before your Downloads folder turns into a crime scene.
 
 ## What it does
 
-- Detects new files in `~/Downloads`, `~/Desktop`, and `~/Documents`
-- Classifies files like screenshots, installers, memes, documents, and archives
-- Scores ugly names and suggests better replacements
-- Lets you rename files one by one, batch-rename flagged items, or manually override a name from the menu bar
-- Supports auto-rename for people who want a cleaner Downloads folder without thinking about it
-- Keeps the app lightweight and local-only
+- Watches `~/Downloads`, `~/Desktop`, and `~/Documents`
+- Suggests cleaner names for screenshots, installers, exports, folders, and AI-generated assets
+- Supports one-click rename, custom rename, batch rename, and `Clean My Mess`
+- Runs locally with no accounts, trackers, or cloud dependency
 
-## Why this exists
+## Landing page
 
-Finder cleanup is still more manual than it should be. Rename Police is meant to be a fast v1 utility that catches messy names early and makes fixing them feel immediate.
+The repo includes a Next.js landing page ready for Vercel.
 
-## Current feature set
+- `app/page.tsx`: marketing homepage
+- `app/layout.tsx`: root layout and Vercel Analytics
+- `app/globals.css`: site styling
+- `package.json`: Next.js and analytics dependencies
 
-- Downloads, Desktop, and Documents monitoring
-- Smart screenshot naming with timestamps
-- Installer cleanup
-- Meme-mode naming for internet junk
-- Native macOS notifications
-- Undo last rename
-- Batch rename for files and folders
-- Custom rename from the menu bar
-- Open-source, no paywall
+The landing page includes:
 
-## Project structure
+- `Download for Mac`
+- `View Source`
+- `Chat with Kiaan`
+- `Support Me` via Dodo Payments
 
-- `RenamePolice/RenamePoliceApp.swift`: App entry and menu bar setup
-- `RenamePolice/ContentView.swift`: Main interface
-- `RenamePolice/RenamePoliceManager.swift`: App state and rename actions
-- `RenamePolice/NamingJudge.swift`: Filename scoring and suggestion logic
-- `RenamePolice/RenamePoliceModels.swift`: Shared models
+## Download flow
+
+You do not need a `.dmg` for v1.
+
+The smoothest setup is:
+
+1. Build the macOS app in Xcode.
+2. Zip the generated `.app` bundle.
+3. Upload that `.zip` to a GitHub Release.
+4. Point the landing page download button to `releases/latest`.
+
+This is faster to ship, easy to update, and works well with Vercel + GitHub.
+
+For local packaging, run `./scripts/package-mac.sh` to create a release zip, or `./scripts/package-mac.sh --dmg` if you want a DMG too.
+
+## macOS app structure
+
+- `RenamePolice/RenamePoliceApp.swift`: app entry and menu bar setup
+- `RenamePolice/ContentView.swift`: main interface
+- `RenamePolice/RenamePoliceManager.swift`: app state and rename actions
+- `RenamePolice/NamingJudge.swift`: filename scoring and suggestion logic
+- `RenamePolice/RenamePoliceModels.swift`: shared models
 - `RenamePolice/DownloadMonitor.swift`: watched-folder polling
-- `RenamePolice/NotificationEngine.swift`: Native notification wrapper
+- `RenamePolice/NotificationEngine.swift`: native notification wrapper
 - `docs/PRD.md`: product requirements and v1 scope
 
-## Dev notes
+## Features in v1
 
-- Built with SwiftUI for macOS
-- No network dependency
-- No cookies, trackers, or accounts
-
-## V1 notes
-
-- The app is intentionally menu-bar first
-- Suggestions are heuristic, not AI-generated
-- Batch rename currently runs from a staged picker inside the app
-
-## Good files to test with
-
-- `Screenshot 2026-03-29 at 4.40.15 PM.png`
-- `final-final-copy.pdf`
-- `Discord Download 4921.png`
-- `CoolApp-2.1.4-macOS.dmg`
-- `IMG_9021.JPG`
+- Menu bar first UI
+- Smart screenshot naming
+- Better installer cleanup
+- AI-export aware suggestions
+- Batch rename for files and folders
+- Custom rename from the menu bar
+- `Clean My Mess` one-click Downloads cleanup
+- Undo last rename
+- Open source, local-first
