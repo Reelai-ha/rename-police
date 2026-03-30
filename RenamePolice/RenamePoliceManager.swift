@@ -40,12 +40,35 @@ final class RenamePoliceManager: ObservableObject {
 
     func start() {
         notifications.requestPermission()
-        rescanDownloads()
-        monitor.start()
-        statusLine = "Monitoring \(monitor.watchedLocationNames())"
+        Task {
+            statusLine = "Patrolling \(monitor.watchedLocationNames())..."
+            await rescanDownloadsAsync()
+            monitor.start()
+            statusLine = "Monitoring \(monitor.watchedLocationNames())"
+        }
+    }
+
+    private func rescanDownloadsAsync() async {
+        // Run file scan in background to avoid freezing the launch cycle
+        let snapshot = await Task.detached {
+            return self.monitor.snapshotFiles()
+        }.value
+        
+        let refreshed = snapshot.compactMap { makeRecord($0) }
+            .filter { $0.judgment.severity != .clean }
+            .sorted { $0.detectedAt > $1.detectedAt }
+        
+        records = Array(refreshed.prefix(20))
+        filesScanned = snapshot.count
+        if let first = records.first {
+            lastJudgment = first.judgment.roast
+        } else {
+            lastJudgment = "The watched folders are surprisingly civilized."
+        }
     }
 
     func rescanDownloads() {
+        // Keep synchronous version for manual refreshes as it's typically faster after initial load
         let snapshot = monitor.snapshotFiles()
         let refreshed = snapshot.compactMap { makeRecord($0) }
             .filter { $0.judgment.severity != .clean }

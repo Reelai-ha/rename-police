@@ -41,6 +41,7 @@ struct MenuBarIcon: View {
     }
 }
 
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     let manager = RenamePoliceManager()
 
