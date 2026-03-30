@@ -4,13 +4,13 @@ Rename Police is a macOS menu bar app that cleans up ugly filenames before they 
 
 ## Download
 
-- [Download Rename Police for Mac](https://github.com/Reelai-ha/rename-police/raw/main/downloads/RenamePolice.app)
+- [Download Rename Police for Mac](https://github.com/Reelai-ha/rename-police/raw/main/downloads/RenamePolice.dmg)
 
 ## Install
 
-1. Download `RenamePolice.app`.
-2. Move `RenamePolice.app` into your `Applications` folder.
-3. Open it and use the menu bar icon to start renaming files.
+1. Download `RenamePolice.dmg`.
+2. Open it and drag `RenamePolice.app` into your `Applications` folder.
+3. Use the menu bar icon to start renaming files.
 
 You do not need Xcode to use the app.
 
